@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Engineer | Architecture & Tooling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f4f4f0;
+      --fg: #000000;
+      --accent: #ff3300; /* Pure stark red/orange */
+      --gray: #777777;
+      --border: 2px solid var(--fg);
+      
+      --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+      
+      --layout-width: 1000px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-mono);
+      background-color: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .layout {
+      max-width: var(--layout-width);
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    /* --- Typography --- */
+    h1, h2, h3 {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: -0.04em;
+    }
+
+    /* --- Navigation --- */
+    .nav {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 6rem;
+      border-bottom: var(--border);
+      padding-bottom: 1rem;
+    }
+
+    .nav-links a {
+      font-size: 1rem;
+      color: var(--fg);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 0.5rem 1rem;
+      border: var(--border);
+      transition: background 0s, color 0s;
+    }
+    
+    .nav-links a:hover { 
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      margin-bottom: 6rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+
+    @media(min-width: 850px) {
+      .hero { grid-template-columns: 1.5fr 1fr; }
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 7vw, 5rem);
+      line-height: 0.95;
+    }
+    
+    .hero-title .accent {
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 1.25rem;
+      font-weight: 400;
+      max-width: 90%;
+    }
+
+    .hero-meta-panel {
+      border: var(--border);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      background: #fff;
+      box-shadow: 8px 8px 0px var(--fg);
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.9rem;
+      border-bottom: 1px dotted var(--gray);
+      padding-bottom: 0.5rem;
+    }
+    
+    .meta-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .meta-label { color: var(--gray); text-transform: uppercase; }
+    .meta-value { font-weight: 600; text-align: right; }
+    .meta-value a { 
+      color: var(--fg); 
+      text-decoration: underline; 
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+    .meta-value a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+    /* --- Section Styling --- */
+    .section { margin-bottom: 8rem; }
+
+    .section-label {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      border-bottom: var(--border);
+      padding-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    
+    .section-label::after {
+      content: '***';
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    /* --- Ecosystem Graph --- */
+    .ecosystem-container {
+      border: var(--border);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      background: #fff;
+    }
+
+    @media(min-width: 850px) {
+      .ecosystem-container {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
+    .pipeline-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      flex: 1;
+    }
+
+    .stage-title {
+      font-size: 0.85rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      font-weight: 600;
+      border-bottom: 1px solid var(--fg);
+      padding-bottom: 0.5rem;
+    }
+
+    .node-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .tech-node {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border: var(--border);
+      text-decoration: none;
+      color: var(--fg);
+      font-weight: 600;
+      font-size: 0.9rem;
+      background: var(--bg);
+      transition: background 0s, color 0s;
+      text-transform: uppercase;
+    }
+
+    .tech-node:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .tech-node.primary {
+      background: var(--fg);
+      color: var(--bg);
+    }
+    
+    .tech-node.primary:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* --- Engineering Modules (Bento) --- */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media(min-width: 850px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .module-card {
+      border: var(--border);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      background: #fff;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .module-card:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 8px 8px 0px var(--accent);
+    }
+
+    .module-header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .module-id {
+      font-size: 0.8rem;
+      color: var(--gray);
+      background: var(--fg);
+      color: #fff;
+      padding: 0.2rem 0.5rem;
+      align-self: flex-start;
+    }
+    
+    .module-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .module-stack {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stack-tag {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--fg);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .module-card:hover .stack-tag {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .module-features {
+      list-style: none;
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .module-features li {
+      font-size: 1rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .module-features li::before {
+      content: '>';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* --- Core Agent Architecture Block --- */
+    .agent-block {
+      border: var(--border);
+      padding: 3rem;
+      background: var(--fg);
+      color: var(--bg);
+    }
+
+    .agent-header {
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--gray);
+      padding-bottom: 1.5rem;
+    }
+
+    .agent-title {
+      font-size: 2.5rem;
+      color: var(--accent);
+    }
+    
+    .agent-role {
+      font-size: 1rem;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+    }
+
+    .agent-stack {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .agent-stack .stack-tag {
+      border-color: var(--gray);
+      color: #fff;
+    }
+
+    .agent-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .agent-features li {
+      font-size: 1.1rem;
+      padding-left: 2rem;
+      position: relative;
+    }
+
+    .agent-features li strong {
+      color: var(--accent);
+    }
+
+    .agent-features li::before {
+      content: '[*]';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--gray);
+    }
+
+    /* --- Print / PDF Styling --- */
+    @media print {
+      body { background: #fff; }
+      .layout { padding: 0; }
+      .nav { display: none; }
+      .hero { gap: 2rem; }
+      .hero-title { font-size: 3rem; }
+      .hero-meta-panel { box-shadow: none; }
+      .section { margin-bottom: 3rem; }
+      .module-card { box-shadow: none; break-inside: avoid; }
+      .module-card:hover { transform: none; box-shadow: none; }
+      .agent-block { background: #fff; color: #000; }
+      .agent-title { color: #000; }
+      .agent-stack .stack-tag { border-color: #000; color: #000; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="layout">
+    
+    <!-- Header Navigation -->
+    <nav class="nav">
+      <div class="nav-links">
+        <a href="https://github.com/r4r1ty-tech" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+          github.com/r4r1ty-tech
+        </a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Engineering <span class="accent">AI</span> Tooling & Systems.</h1>
+        <p class="hero-desc">
+          Разработчик с фокусом на создание автономных систем и AI-инфраструктуры. Проектирую многоагентные workflow, кастомные MCP-модули и RAG-архитектуры. Объединяю LLM с реальным инженерным окружением.
+        </p>
+      </div>
+      
+      <div class="hero-meta-panel">
+        <div class="meta-row"><span class="meta-label">Role</span><span class="meta-value">AI Fullstack Intern</span></div>
+        <div class="meta-row"><span class="meta-label">Name</span><span class="meta-value">Алексей</span></div>
+        <div class="meta-row"><span class="meta-label">Telegram</span><span class="meta-value"><a href="https://t.me/HpLazerJet1005" target="_blank">@HpLazerJet1005</a></span></div>
+        <div class="meta-row"><span class="meta-label">Education</span><span class="meta-value">СНИУ им. Королева</span></div>
+      </div>
+    </header>
+
+    <!-- Technology Ecosystem Graph -->
+    <section class="section">
+      <div class="section-label">Architecture Stack</div>
+      
+      <div class="ecosystem-container">
+        
+        <!-- Stage 1: Orchestration Runtime -->
+        <div class="pipeline-stage">
+          <span class="stage-title">Stage_01: Agent Runtime</span>
+          <div class="node-group">
+            <a href="https://hermes-agent.org/" target="_blank" class="tech-node primary">Hermes Agent</a>
+            <a href="https://langchain-ai.github.io/langgraph/" target="_blank" class="tech-node">LangGraph</a>
+            <a href="https://github.com/openclaw/openclaw" target="_blank" class="tech-node">OpenClaw</a>
+            <a href="https://n8n.io/" target="_blank" class="tech-node">n8n Workflow</a>
+          </div>
+        </div>
+
+        <!-- Stage 2: Routing & Access -->
+        <div class="pipeline-stage">
+          <span class="stage-title">Stage_02: Gateway & Tooling</span>
+          <div class="node-group">
+            <a href="https://github.com/diegosouzapw/OmniRoute" target="_blank" class="tech-node primary">OmniRoute</a>
+            <a href="https://modelcontextprotocol.io/" target="_blank" class="tech-node primary">MCP Spec</a>
+            <a href="https://openrouter.ai/" target="_blank" class="tech-node">OpenRouter</a>
+            <a href="https://ollama.ai/" target="_blank" class="tech-node">Ollama</a>
+          </div>
+        </div>
+
+        <!-- Stage 3: Core Infra -->
+        <div class="pipeline-stage">
+          <span class="stage-title">Stage_03: Infrastructure</span>
+          <div class="node-group">
+            <a href="https://go.dev/" target="_blank" class="tech-node">Go / CLI</a>
+            <a href="https://www.docker.com/" target="_blank" class="tech-node">Docker Compose</a>
+            <a href="https://www.postgresql.org/" target="_blank" class="tech-node">PostgreSQL</a>
+            <a href="#" class="tech-node">Linux / VPS</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Engineering Modules -->
+    <section class="section">
+      <div class="section-label">Engineering Modules</div>
+      
+      <div class="bento-grid">
+        
+        <!-- Module 1 -->
+        <article class="module-card">
+          <div class="module-header">
+            <span class="module-id">sys.pipeline.01</span>
+            <h3 class="module-title">AI Job Hunter Automation</h3>
+            <div class="module-stack">
+              <span class="stack-tag">Go</span>
+              <span class="stack-tag">n8n</span>
+            </div>
+          </div>
+          <ul class="module-features">
+            <li>Автоматизировал полный цикл поиска и семантического анализа вакансий по инженерным критериям.</li>
+            <li>Реализовал систему динамического роутинга запросов между LLM-провайдерами.</li>
+          </ul>
+        </article>
+
+        <!-- Module 2 -->
+        <article class="module-card">
+          <div class="module-header">
+            <span class="module-id">sys.core.02</span>
+            <h3 class="module-title">MCP Integration Engine</h3>
+            <div class="module-stack">
+              <span class="stack-tag">Go</span>
+              <span class="stack-tag">MCP SDK</span>
+            </div>
+          </div>
+          <ul class="module-features">
+            <li>Разрабатывал кастомные MCP-серверы для безопасного проброса локальных API в контекст моделей.</li>
+            <li>Создавал специализированные skills для расширения возможностей AI-агентов.</li>
+          </ul>
+        </article>
+
+        <!-- Module 3 -->
+        <article class="module-card">
+          <div class="module-header">
+            <span class="module-id">sys.agent.03</span>
+            <h3 class="module-title">Support RAG System</h3>
+            <div class="module-stack">
+              <span class="stack-tag">Python/Go</span>
+              <span class="stack-tag">Vector DB</span>
+            </div>
+          </div>
+          <ul class="module-features">
+            <li>Разработал архитектуру автоматической обработки типовых пользовательских обращений.</li>
+            <li>Внедрил поиск по базе знаний через векторные представления для подготовки контекста.</li>
+          </ul>
+        </article>
+
+        <!-- Module 4 -->
+        <article class="module-card">
+          <div class="module-header">
+            <span class="module-id">sys.ops.04</span>
+            <h3 class="module-title">Self-Hosted Environment</h3>
+            <div class="module-stack">
+              <span class="stack-tag">Linux</span>
+              <span class="stack-tag">Docker Compose</span>
+            </div>
+          </div>
+          <ul class="module-features">
+            <li>Администрировал VPS: настройка Reverse Proxy, CI-скриптов и мониторинга.</li>
+            <li>Разворачивал инференс-ноды через Ollama для приватного тестирования.</li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Main Agent / Core Orchestrator Block -->
+    <section class="section">
+      <div class="section-label">Core Architecture Showcase</div>
+      
+      <div class="agent-block">
+        <div class="agent-header">
+          <div class="agent-role">Autonomous Orchestrator Runtime</div>
+          <h2 class="agent-title">Main AI Agent Stack</h2>
+        </div>
+        
+        <div class="agent-stack">
+          <span class="stack-tag">Hermes Agent</span>
+          <span class="stack-tag">OmniRoute</span>
+          <span class="stack-tag">DeepSeek API</span>
+          <span class="stack-tag">CLI Tooling</span>
+        </div>
+
+        <ul class="agent-features">
+          <li>Архитектура построена вокруг <strong>Hermes Agent</strong> как центрального оркестратора с persistent memory и системой самообучаемых навыков (skills).</li>
+          <li>Внедрен <strong>OmniRoute</strong> в качестве локального AI-шлюза (routing layer) для интеллектуального переключения между провайдерами и оптимизации контекста.</li>
+          <li>Глубокая интеграция с терминальными утилитами (включая Gemini CLI) и разработка локальных proxy API для бесшовной работы из командной строки.</li>
+          <li>Использование <strong>DeepSeek API</strong> через унифицированные интерфейсы для сложной генерации кода в рамках автономных циклов.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
